@@ -143,7 +143,6 @@ import dalvik.annotation.optimization.NeverCompile;
 
 import lineageos.providers.LineageSettings;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -859,7 +858,6 @@ public final class PowerManagerService extends SystemService
     private static String mPowerInputSuspendSysfsNode;
     private static String mPowerInputSuspendValue;
     private static String mPowerInputResumeValue;
-
     // smart charging state 
     // 0 - suspended
     // 1 - charging enabled
@@ -1092,8 +1090,7 @@ public final class PowerManagerService extends SystemService
     private static native boolean nativeSetPowerMode(int mode, boolean enabled);
     private static native boolean nativeForceSuspend();
 
-    // overrule and disable brightness for buttons
-    private boolean mHardwareKeysDisable = false;
+    private boolean mForceNavbar;
 
     // Whether proximity check on wake is enabled by default
     private boolean mProximityWakeEnabledByDefaultConfig;
@@ -1478,8 +1475,8 @@ public final class PowerManagerService extends SystemService
         resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
                 LineageSettings.Secure.KEYBOARD_BRIGHTNESS),
                 false, mSettingsObserver, UserHandle.USER_ALL);
-        resolver.registerContentObserver(Settings.System.getUriFor(
-                Settings.System.HARDWARE_KEYS_DISABLE),
+        resolver.registerContentObserver(LineageSettings.System.getUriFor(
+                LineageSettings.System.FORCE_SHOW_NAVBAR),
                 false, mSettingsObserver, UserHandle.USER_ALL);
 
         IVrManager vrManager = IVrManager.Stub.asInterface(getBinderService(Context.VR_SERVICE));
@@ -1663,9 +1660,9 @@ public final class PowerManagerService extends SystemService
                 LineageSettings.Secure.KEYBOARD_BRIGHTNESS, mKeyboardBrightnessDefault,
                 UserHandle.USER_CURRENT);
 
-        mHardwareKeysDisable = Settings.System.getIntForUser(resolver,
-                Settings.System.HARDWARE_KEYS_DISABLE, 0,
-                UserHandle.USER_CURRENT) != 0;
+        mForceNavbar = LineageSettings.System.getIntForUser(resolver,
+                LineageSettings.System.FORCE_SHOW_NAVBAR,
+                0, UserHandle.USER_CURRENT) == 1;
 
         mDirty |= DIRTY_SETTINGS;
     }
@@ -2710,7 +2707,7 @@ public final class PowerManagerService extends SystemService
                 if (mBootCompleted) {
                     if (mIsPowered && !BatteryManager.isPlugWired(oldPlugType)
                             && BatteryManager.isPlugWired(mPlugType)) {
-                        mNotifier.onWiredChargingStarted(mBatteryLevel, mUserId);
+                        mNotifier.onWirelessChargingStarted(mBatteryLevel, mUserId);
                     } else if (wasPowered && !mIsPowered) {
                         if (oldPlugType == BatteryManager.BATTERY_PLUGGED_WIRELESS) {
                             mNotifier.onWirelessChargingInterrupted(mUserId);
@@ -2729,42 +2726,6 @@ public final class PowerManagerService extends SystemService
     }
 
     private void updateSmartChargingStatus() {
-
-        if (!mSmartChargingAvailable) return;
-
-        String readValue = "";
-        try {
-            readValue= FileUtils.readTextFile(new File(mPowerInputSuspendSysfsNode), 100, "");
-        } catch (IOException e) {
-            Slog.e(TAG, "failed to write to " + mPowerInputSuspendSysfsNode);
-        }
-        
-        boolean powerInputSuspended = readValue.contains(mPowerInputSuspendValue)? true: false;
-        
-        if (powerInputSuspended && ((mSmartChargingResumeLevel < mSmartChargingLevel &&
-            mBatteryLevel <= mSmartChargingResumeLevel) || !mSmartChargingEnabled)) {
-            try {
-                FileUtils.stringToFile(mPowerInputSuspendSysfsNode, mPowerInputResumeValue);
-            } catch (IOException e) {
-                Slog.e(TAG, "failed to write to " + mPowerInputSuspendSysfsNode);
-            }
-        }
-        else if (mSmartChargingEnabled && !powerInputSuspended && (mBatteryLevel >= mSmartChargingLevel)) {
-            Slog.i(TAG, "Smart charging reset stats: " + mSmartChargingResetStats);
-            if (mSmartChargingResetStats) {
-                try {
-                     mBatteryStats.resetStatistics();
-                } catch (RemoteException e) {
-                         Slog.e(TAG, "failed to reset battery statistics");
-                }
-            }
-
-            try {
-                FileUtils.stringToFile(mPowerInputSuspendSysfsNode, mPowerInputSuspendValue);
-            } catch (IOException e) {
-                    Slog.e(TAG, "failed to write to " + mPowerInputSuspendSysfsNode);
-            }
-
     	boolean isPixelDevice = mPowerInputSuspendSysfsNode.contains("google");
     	// Update once if smart charging initialization failed due to IOException
     	if (!mSmartChargingAvailable || mSmartChargeState == 2) return;
@@ -2799,8 +2760,9 @@ public final class PowerManagerService extends SystemService
          } catch (IOException e) {
              Slog.e(TAG, "failed to write to " + mPowerInputSuspendSysfsNode);
              mSmartChargeState = 2;
-
         }
+        mPrevSmartChargeState = mSmartChargeState;
+        mPrevSmartChargeValue = smartChargeValue;
     }
 
     @GuardedBy("mLock")
@@ -3111,7 +3073,7 @@ public final class PowerManagerService extends SystemService
                         if (wakefulness == WAKEFULNESS_AWAKE) {
                             if (mButtonsLight != null) {
                                 float buttonBrightness = BRIGHTNESS_OFF_FLOAT;
-                                if (!mHardwareKeysDisable) {
+                                if (!mForceNavbar) {
                                     if (isValidBrightness(
                                             mButtonBrightnessOverrideFromWindowManager)) {
                                         if (mButtonBrightnessOverrideFromWindowManager >
@@ -3618,8 +3580,7 @@ public final class PowerManagerService extends SystemService
             }
             final PowerGroup powerGroup = mPowerGroups.get(groupId);
             wakefulness = powerGroup.getWakefulnessLocked();
-            if ((wakefulness == WAKEFULNESS_DREAMING || wakefulness == WAKEFULNESS_DOZING) &&
-                    powerGroup.isSandmanSummonedLocked() && powerGroup.isReadyLocked()) {
+            if (powerGroup.isSandmanSummonedLocked() && powerGroup.isReadyLocked()) {
                 startDreaming = canDreamLocked(powerGroup) || canDozeLocked(powerGroup);
                 powerGroup.setSandmanSummonedLocked(/* isSandmanSummoned= */ false);
             } else {
