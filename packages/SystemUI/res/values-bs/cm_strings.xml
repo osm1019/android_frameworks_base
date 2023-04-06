@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 -->
-<<<<<<< HEAD:packages/SystemUI/res/values-bs/cm_strings.xml
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="global_action_restart_system">Sistem</string>
     <string name="accessibility_quick_settings_profiles_off">Profili isključeni.</string>
     <string name="accessibility_quick_settings_profiles">Profil: <xliff:g id="profile" example="Default">%s</xliff:g>.</string>
 </resources>
-=======
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.theme.icon_pack.circular.launcher"
     android:allowBackup="false"
@@ -32,4 +32,4 @@
     <overlay android:targetPackage="com.android.launcher3" android:category="android.theme.customization.icon_pack.launcher" android:priority="1"/>
     <application android:label="Circular" android:hasCode="false"/>
 </manifest>
->>>>>>> 92693d71a12d (overlays: Exclude from Google backup [1/2]):packages/overlays/IconPackCircularLauncherOverlay/AndroidManifest.xml
+
