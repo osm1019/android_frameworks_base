@@ -847,6 +847,18 @@ public class ApplicationPackageManager extends PackageManager {
             "com.google.android.feature.PIXEL_2022_MIDYEAR_EXPERIENCE",
             "com.google.android.feature.PIXEL_2021_EXPERIENCE",
             "com.google.android.feature.PIXEL_2021_MIDYEAR_EXPERIENCE"
+            "com.google.android.feature.GOOGLE_EXPERIENCE",
+            "com.google.lens.feature.IMAGE_INTEGRATION",    
+            "com.google.lens.feature.CAMERA_INTEGRATION",
+            "com.google.photos.trust_debug_certs",
+            "com.google.android.feature.AER_OPTIMIZED",
+            "com.google.android.feature.NEXT_GENERATION_ASSISTANT",
+            "com.google.android.feature.ADAPTIVE_CHARGING",
+            "com.google.android.feature.DREAMLINER",
+            "android.software.game_service",
+            "com.google.android.feature.EXCHANGE_6_2",
+            "com.google.android.apps.dialer.call_recording_audio",
+            "com.google.android.apps.dialer.SUPPORTED"
     };
 
     private static final String[] featuresNexus = {
