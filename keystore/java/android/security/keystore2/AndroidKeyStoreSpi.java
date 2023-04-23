@@ -42,6 +42,7 @@ import android.system.keystore2.ResponseCode;
 import android.util.Log;
 
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.util.crdroid.PixelPropsUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -76,8 +77,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.crypto.SecretKey;
-
-import com.android.internal.util.crdroid.PixelPropsUtils;
 
 /**
  * A java.security.KeyStore interface for the Android KeyStore. An instance of
