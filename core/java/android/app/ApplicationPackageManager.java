@@ -846,7 +846,7 @@ public class ApplicationPackageManager extends PackageManager {
             "com.google.android.feature.PIXEL_2022_EXPERIENCE",
             "com.google.android.feature.PIXEL_2022_MIDYEAR_EXPERIENCE",
             "com.google.android.feature.PIXEL_2021_EXPERIENCE",
-            "com.google.android.feature.PIXEL_2021_MIDYEAR_EXPERIENCE"
+            "com.google.android.feature.PIXEL_2021_MIDYEAR_EXPERIENCE",
             "com.google.android.feature.GOOGLE_EXPERIENCE",
             "com.google.lens.feature.IMAGE_INTEGRATION",    
             "com.google.lens.feature.CAMERA_INTEGRATION",
