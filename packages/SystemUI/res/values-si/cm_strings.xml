@@ -17,7 +17,18 @@
  * limitations under the License.
  */
 -->
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="accessibility_dpad_left">වම් කර්සරය</string>
     <string name="accessibility_dpad_right">දකුණු කර්සරය</string>
 </resources>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.theme.icon_pack.circular.android"
+    android:allowBackup="false"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <overlay android:targetPackage="android" android:category="android.theme.customization.icon_pack.android" android:priority="1"/>
+    <application android:label="Circular" android:hasCode="false"/>
+</manifest>
+
