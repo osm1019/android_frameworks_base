@@ -13,6 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<<<<<<< HEAD:packages/SystemUI/res/layout-land/global_actions_power_dialog.xml
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
@@ -22,3 +23,13 @@
     android:showDividers="middle"
 />
 
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.theme.icon_pack.kai.android"
+    android:allowBackup="false"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <overlay android:targetPackage="android" android:category="android.theme.customization.icon_pack.android" android:priority="1"/>
+    <application android:label="Kai" android:hasCode="false"/>
+</manifest>
+>>>>>>> 92693d71a12d (overlays: Exclude from Google backup [1/2]):packages/overlays/IconPackKaiAndroidOverlay/AndroidManifest.xml

@@ -17,6 +17,17 @@
  * limitations under the License.
  */
 -->
+<<<<<<< HEAD:packages/SystemUI/res/values-my/cm_strings.xml
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="clock">နာရီ</string>
 </resources>
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.theme.icon_pack.rounded.android"
+    android:allowBackup="false"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <overlay android:targetPackage="android" android:category="android.theme.customization.icon_pack.android" android:priority="1"/>
+    <application android:label="Rounded" android:hasCode="false"/>
+</manifest>
+>>>>>>> 92693d71a12d (overlays: Exclude from Google backup [1/2]):packages/overlays/IconPackRoundedAndroidOverlay/AndroidManifest.xml

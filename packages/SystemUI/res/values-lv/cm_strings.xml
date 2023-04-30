@@ -17,7 +17,18 @@
  * limitations under the License.
  */
 -->
+<<<<<<< HEAD:packages/SystemUI/res/values-lv/cm_strings.xml
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="accessibility_dpad_left">Kursoru pa kreisi</string>
     <string name="accessibility_dpad_right">Kursoru pa labi</string>
 </resources>
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.theme.icon_pack.filled.android"
+    android:allowBackup="false"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <overlay android:targetPackage="android" android:category="android.theme.customization.icon_pack.android" android:priority="1"/>
+    <application android:label="Filled" android:hasCode="false"/>
+</manifest>
+>>>>>>> 92693d71a12d (overlays: Exclude from Google backup [1/2]):packages/overlays/IconPackFilledAndroidOverlay/AndroidManifest.xml
