@@ -47,9 +47,11 @@ public class PixelPropsUtils {
     private static final String sStockFp =
             Resources.getSystem().getString(R.string.config_stockFingerprint);
 
-    private static final String DEVICE = "ro.lineage.device";
+    private static final String DEVICE = "ro.pixeldust.device";
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
     private static final boolean DEBUG = false;
+    private static boolean isPixelDevice = false;
+    private static final Map<String, Object> propsToChange;
     private static final Map<String, Object> propsToChangePixel7Pro;
     private static final Map<String, Object> propsToChangePixelXL;
     private static final Map<String, ArrayList<String>> propsToKeep;
@@ -115,6 +117,7 @@ public class PixelPropsUtils {
     static {
         propsToKeep = new HashMap<>();
         propsToKeep.put(PACKAGE_SETTINGS_SERVICES, new ArrayList<>(Collections.singletonList("FINGERPRINT")));
+        propsToChange = new HashMap<>();
         propsToChangePixel7Pro = new HashMap<>();
         propsToChangePixel7Pro.put("BRAND", "google");
         propsToChangePixel7Pro.put("MANUFACTURER", "Google");
@@ -131,11 +134,10 @@ public class PixelPropsUtils {
         propsToChangePixelXL.put("MODEL", "Pixel XL");
         propsToChangePixelXL.put(
                 "FINGERPRINT", "google/marlin/marlin:10/QP1A.191005.007.A3/5972272:user/release-keys");
+        isPixelDevice = Arrays.asList(pixelCodenames).contains(SystemProperties.get(DEVICE));
     }
 
     public static void setProps(String packageName) {
-        Map<String, Object> propsToChange = new HashMap<>();
-        boolean isPixelDevice = Arrays.asList(pixelCodenames).contains(SystemProperties.get(DEVICE));
         if (packageName == null || (Arrays.asList(packagesToKeep).contains(packageName))) {
             return;
         }
@@ -148,8 +150,7 @@ public class PixelPropsUtils {
             if (packageName.equals(PACKAGE_GPHOTOS)) {
                 if (SystemProperties.getBoolean("persist.sys.pixelprops.gphotos", false)) {
                     propsToChange.putAll(propsToChangePixelXL);
-                } else {
-                    if (isPixelDevice) return;
+                } else if (!isPixelDevice) {
                     propsToChange.putAll(propsToChangePixel7Pro);
                 }
             } else {
