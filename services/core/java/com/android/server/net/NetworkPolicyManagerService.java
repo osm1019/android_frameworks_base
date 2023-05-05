@@ -6227,8 +6227,7 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
 
         mStatLogger.logDurationStat(Stats.IS_UID_NETWORKING_BLOCKED, startTime);
 
-        return blockedReasons != BLOCKED_REASON_NONE
-                || mConnManager.isUidCurrentlyDisallowedByPolicy(uid);
+        return blockedReasons != BLOCKED_REASON_NONE;
     }
 
     @Override
